@@ -44,7 +44,7 @@ glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 bool active;
 
 float tiempo;
-float speed=0.0f;
+float speed=0.8f;
 
 // Positions of the point lights
 glm::vec3 pointLightPositions[] = {
@@ -162,7 +162,7 @@ int main()
 	Model Piso((char*)"Models/Sea/Sea.obj");
 	Model SV((char*)"Models/Sea/salvavidas.obj");
 	Model Box((char*)"Models/Box/Box.obj");
-
+	Model sofa((char*)"Models/simplesofa_obj/sofa_textura.obj");
 
 
 	// First, set the container's VAO (and VBO)
@@ -347,7 +347,7 @@ int main()
 		model = glm::translate(model, glm::vec3(0.0f, 0.1f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(Anim.Program, "time"), tiempo);
-		SV.Draw(Anim2);
+		sofa.Draw(Anim2);
 		glBindVertexArray(0);
 		// Swap the screen buffers
 		glfwSwapBuffers(window);
