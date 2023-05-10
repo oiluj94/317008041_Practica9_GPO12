@@ -161,8 +161,8 @@ int main()
 
 	Model Piso((char*)"Models/Sea/Sea.obj");
 	Model SV((char*)"Models/Sea/salvavidas.obj");
-	Model Box((char*)"Models/Box/Box.obj");
-	Model sofa((char*)"Models/simplesofa_obj/sofa_textura.obj");
+	//Model Box((char*)"Models/Box/Box.obj");
+	//Model sofa((char*)"Models/simplesofa_obj/sofa_textura.obj");
 
 
 	// First, set the container's VAO (and VBO)
@@ -330,7 +330,7 @@ int main()
 		model = glm::translate(model, glm::vec3(0.0f, 0.1f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(Anim.Program, "time"), tiempo);
-		//Piso.Draw(Anim);
+		Piso.Draw(Anim);
 		glBindVertexArray(0);
 	     
 		Anim2.Use();
@@ -347,7 +347,7 @@ int main()
 		model = glm::translate(model, glm::vec3(0.0f, 0.1f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(Anim.Program, "time"), tiempo);
-		sofa.Draw(Anim2);
+		SV.Draw(Anim2);
 		glBindVertexArray(0);
 		// Swap the screen buffers
 		glfwSwapBuffers(window);
