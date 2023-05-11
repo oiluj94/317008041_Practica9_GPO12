@@ -44,7 +44,7 @@ glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 bool active;
 
 float tiempo;
-float speed=0.8f;
+float speed=0.0f;
 
 // Positions of the point lights
 glm::vec3 pointLightPositions[] = {
@@ -162,7 +162,7 @@ int main()
 	Model Piso((char*)"Models/Sea/Sea.obj");
 	Model SV((char*)"Models/Sea/salvavidas.obj");
 	//Model Box((char*)"Models/Box/Box.obj");
-	//Model sofa((char*)"Models/simplesofa_obj/sofa_textura.obj");
+	Model sofa((char*)"Models/simplesofa_obj/sofa_textura.obj");
 
 
 	// First, set the container's VAO (and VBO)
@@ -236,8 +236,8 @@ int main()
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].diffuse"), lightColor.x,lightColor.y,lightColor.z);
 		glUniform3f(glGetUniformLocation(lightingShader.Program, "pointLights[0].specular"), 0.0f, 0.0f, 0.0f);
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].constant"), 1.0f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].linear"), 0.7f);
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].quadratic"),1.8f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].linear"), 0.07f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "pointLights[0].quadratic"),0.017f);
 
 
 
@@ -281,7 +281,8 @@ int main()
 		glUniform1f(glGetUniformLocation(lightingShader.Program, "spotLight.outerCutOff"), glm::cos(glm::radians(15.0f)));
 
 		// Set material properties
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 16.0f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "material.specular"), 0.0f,0.0f,0.0f);
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 0.0f);
 
 		// Create camera transformations
 		glm::mat4 view;
@@ -330,10 +331,13 @@ int main()
 		model = glm::translate(model, glm::vec3(0.0f, 0.1f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1f(glGetUniformLocation(Anim.Program, "time"), tiempo);
-		Piso.Draw(Anim);
+		//Piso.Draw(Anim);
 		glBindVertexArray(0);
 	     
 		Anim2.Use();
+
+		
+
 		tiempo = glfwGetTime() * speed;
 		// Get location objects for the matrices on the lamp shader (these could be different on a different shader)
 		modelLoc = glGetUniformLocation(Anim2.Program, "model");
@@ -346,9 +350,26 @@ int main()
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(0.0f, 0.1f, 0.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glUniform1f(glGetUniformLocation(Anim.Program, "time"), tiempo);
-		SV.Draw(Anim2);
+		glUniform1f(glGetUniformLocation(Anim2.Program, "time"), tiempo);
+		//sofa.Draw(Anim2);
 		glBindVertexArray(0);
+
+		lightingShader.Use();
+		// Get location objects for the matrices on the lamp shader (these could be different on a different shader)
+		modelLoc = glGetUniformLocation(lightingShader.Program, "model");
+		viewLoc = glGetUniformLocation(lightingShader.Program, "view");
+		projLoc = glGetUniformLocation(lightingShader.Program, "projection");
+		// Set matrices
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(0.0f, 0.1f, 0.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1f(glGetUniformLocation(lightingShader.Program, "time"), tiempo);
+		sofa.Draw(lightingShader);
+		glBindVertexArray(0);
+
 		// Swap the screen buffers
 		glfwSwapBuffers(window);
 	}
